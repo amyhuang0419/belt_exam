@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotes Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard_style.css' %}">
+</head>
+<body>
+    <h2>Welcome, {{user.first_name}}</h2>
+    <div class="logoutPosition">
+        <a href="/logout">Log Out</a>
+    </div>
+    <div class="board_div_display">
+        <h3>Quotable Quotes</h3>
+        <div id="all_quotes_border">
+            {% for quote in quotes %}
+            <div class="quote_border">
+                {% if quote.posted_by.id == request.session.user_id %}
+                    <a href="/quotes/{{quote.id}}/edit">Edit</a> | <a href="/quotes/{{quote.id}}/delete">Delete</a>
+                {% endif %}
+                <p>{{quote.quoted_by}}: {{quote.message}}
+                <br><br>
+                Posted by <a href="/users/{{quote.posted_by.id}}">{{quote.posted_by.first_name}}</a> <br><br>
+                <a href="/favorite/{{quote.id}}" class="mod_favor_link">Add to Favorite</a>     
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="board_div_display">
+        <h3>Your Favorite</h3>
+        <div id="all_favors_border">
+            {% for favor_quote in favor_quotes %}
+            <div class="quote_border">
+                {% if favor_quote.posted_by.id == request.session.user_id %}
+                    <a href="/quotes/{{favor_quote.id}}/edit">Edit</a> | <a href="/quotes/{{favor_quote.id}}/delete">Delete</a>
+                {% endif %}
+                <p>{{favor_quote.quoted_by}}: {{favor_quote.message}}
+                <br><br>
+                Posted by <a href="/users/{{favor_quote.posted_by.id}}">{{favor_quote.posted_by.first_name}}</a>   <br><br>
+                <a href="/unfavorite/{{favor_quote.id}}" class="mod_favor_link">Remove from Favorite</a>     
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="board_div_display">
+        <h3>Contribute a Quote</h3>
+        <div class="quote_box">
+            {% if messages %}
+                {% for message in messages %}
+                    <p><strong>{{message}}</strong></p>
+                {% endfor %}
+            {% endif %}
+            <form action="/quotes/create" method="POST">
+                {% csrf_token %}
+                <div>
+                    <label>Quoted By</label>
+                    <input type="text" name="quoted_by">
+                </div>
+                <div>
+                    <label>Message</label><br>
+                    <textarea name="message" rows="8" cols="30"></textarea>
+                </div>
+                <div>
+                    <input type="submit" value="Submit">
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

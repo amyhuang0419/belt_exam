@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Quote</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard_style.css' %}">
+</head>
+<body>
+    <div id="edit_page">
+        <h3>Edit Quote</h3>
+        <div class="logoutPosition">
+            <a href="/quotes">Dashboard</a> | <a href="/logout">Log Out</a>
+        </div>
+        <div class="quote_box">
+            {% if messages %}
+                {% for message in messages %}
+                    <p><strong>{{message}}</strong></p>
+                {% endfor %}
+            {% endif %}
+            <form action="/quotes/{{quote.id}}/update" method="POST">
+                {% csrf_token %}
+                <div>
+                    <label>Quoted By</label>
+                    <input type="text" name="quoted_by" value="{{quote.quoted_by}}">
+                </div>
+                <div>
+                    <label>Message</label><br>
+                    <textarea name="message" rows="8" cols="30">{{quote.message}}</textarea>
+                </div>
+                <div>
+                    <input type="submit" value="Submit"> | <a href="/quotes" class="mod_favor_link">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
